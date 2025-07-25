@@ -159,7 +159,7 @@ class GptQueryIntentHandler(AbstractRequestHandler):
             device_id = f". device_id: {context.system.device.device_id}"
 
         full_query = query + device_id
-        response = process_conversation(full_query})
+        response = process_conversation(full_query)
         logger.info(f"Response generated: {response}")
 
         logger.debug(f"Ask for further commands enabled: {ask_for_further_commands}")
