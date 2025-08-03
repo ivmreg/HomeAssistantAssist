@@ -57,8 +57,8 @@ user_locale = "US"  # Default locale
 home_assistant_url = globals().get("home_assistant_url", "").strip("/")
 apl_document_token = str(uuid.uuid4())
 assist_input_entity = globals().get("assist_input_entity", "input_text.assistant_input")
-ask_for_further_commands = bool(globals().get("ask_for_further_commands", False))
-suppress_greeting = bool(globals().get("suppress_greeting", False))
+ask_for_further_commands = globals().get("ask_for_further_commands", "False")
+suppress_greeting = globals().get("suppress_greeting", "False")
 
 # Helper: fetch text input via webhook
 def fetch_prompt_from_ha():
@@ -126,7 +126,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
             speak_output = globals().get("alexa_speak_welcome_message")
             last_interaction_date = current_date
 
-        if suppress_greeting:
+        if suppress_greeting.lower() == "true":
             return handler_input.response_builder.ask("").response
         else:
             return handler_input.response_builder.speak(speak_output).ask(speak_output).response
@@ -163,7 +163,7 @@ class GptQueryIntentHandler(AbstractRequestHandler):
         logger.info(f"Response generated: {response}")
 
         logger.debug(f"Ask for further commands enabled: {ask_for_further_commands}")
-        if ask_for_further_commands:
+        if ask_for_further_commands.lower() == "true":
             return response_builder.speak(response).ask(globals().get("alexa_speak_question")).response
         else:
             return response_builder.speak(response).set_should_end_session(True).response
