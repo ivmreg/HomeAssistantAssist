@@ -57,6 +57,8 @@ user_locale = "US"  # Default locale
 home_assistant_url = globals().get("home_assistant_url", "").strip("/")
 apl_document_token = str(uuid.uuid4())
 assist_input_entity = globals().get("assist_input_entity", "input_text.assistant_input")
+home_assistant_room_recognition = globals().get("home_assistant_room_recognition", False)
+home_assistant_kioskmode = globals().get("home_assistant_kioskmode", False)
 ask_for_further_commands = globals().get("ask_for_further_commands", "False")
 suppress_greeting = globals().get("suppress_greeting", "False")
 
@@ -155,7 +157,7 @@ class GptQueryIntentHandler(AbstractRequestHandler):
 
         # Include device ID if needed
         device_id = ""
-        if bool(os.environ.get("home_assistant_room_recognition", False)):
+        if home_assistant_room_recognition.lower() == "true":
             device_id = f". device_id: {context.system.device.device_id}"
 
         full_query = query + device_id
@@ -348,8 +350,8 @@ def get_hadash_url():
     ha_dashboard_url = home_assistant_url
     ha_dashboard_url += "/{}".format(globals().get("home_assistant_dashboard", "lovelace"))
     
-    home_assistant_kioskmode = bool(globals().get("home_assistant_kioskmode", False))
-    if home_assistant_kioskmode:
+    
+    if home_assistant_kioskmode.lower() == "true":
         ha_dashboard_url += '?kiosk'
     
     logger.debug(f"ha_dashboard_url: {ha_dashboard_url}")
